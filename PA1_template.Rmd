@@ -123,32 +123,28 @@ median(stepsPerDayImp$steps)
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-create a  factor variable with two levels (weekday and weekend )
-
-```{r echo=TRUE}
-
-weekends <- MyDataImputed$date
-weekends <- weekdays(weekends) %in% c("Saturday", "Sunday")
-MyDataImputed <- transform(MyDataImputed, week = ifelse(weekends ,'weekend', 'weekday'))
-MyDataImputed$week <- as.factor(MyDataImputed$week)
-
-```
-
+*create a  factor variable with two levels (weekday and weekend )
 *a panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
 
 
 ```{r echo=TRUE}
+MyDataImputed['type_of_day'] <- weekdays(as.Date(MyDataImputed$date))
+MyDataImputed$type_of_day[MyDataImputed$type_of_day  %in% c('Saturday','Sunday') ] <- "weekend"
+MyDataImputed$type_of_day[MyDataImputed$type_of_day != "weekend"] <- "weekday"
 
-stepsPerIntervalByWeek <- aggregate(MyDataImputed,list(week=MyDataImputed$week),mean )
-str(stepsPerIntervalByWeek)
+# convert type_of_day from character to factor
+MyDataImputed$type_of_day <- as.factor(MyDataImputed$type_of_day)
 
-stepsPerIntervalByWeek$time <- formatC(stepsPerIntervalByWeek$interval, width = 4, format = "d", flag = "0")
-stepsPerIntervalByWeek$time <- as.POSIXct(stepsPerIntervalByWeek$time, format="%H%M")
+# calculate average steps by interval across all days
+df_imputed_steps_by_interval <- aggregate(steps ~ interval + type_of_day, MyDataImputed, mean)
 
-g <- ggplot(stepsPerIntervalByWeek, aes(x = time, y = steps))
-g <- g + geom_bar(stat = "identity")
-g <- g + facet_wrap(~week, ncol=2)
-g
+# creat a plot
+qplot(interval, 
+      steps, 
+      data = df_imputed_steps_by_interval, 
+      type = 'l', 
+      geom=c("line"),xlab = "Interval", ylab = "Number of steps", main = "") +
+      facet_wrap(~ type_of_day, ncol = 1)
 
 ```
 

@@ -173,36 +173,34 @@ median(stepsPerDayImp$steps)
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-create a  factor variable with two levels (weekday and weekend )
-
-
-```r
-weekends <- MyDataImputed$date
-weekends <- weekdays(weekends) %in% c("Saturday", "Sunday")
-MyDataImputed <- transform(MyDataImputed, week = ifelse(weekends ,'weekend', 'weekday'))
-MyDataImputed$week <- as.factor(MyDataImputed$week)
-```
-
+*create a  factor variable with two levels (weekday and weekend )
 *a panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
 
 
 
 ```r
-stepsPerIntervalByWeek <-
-  aggregate(MyDataImputed$steps, list(interval = MyDataImputed$interval, week = MyDataImputed$week), mean)
-str(stepsPerIntervalByWeek)
+MyDataImputed['type_of_day'] <- weekdays(as.Date(MyDataImputed$date))
+MyDataImputed$type_of_day[MyDataImputed$type_of_day  %in% c('Saturday','Sunday') ] <- "weekend"
+MyDataImputed$type_of_day[MyDataImputed$type_of_day != "weekend"] <- "weekday"
+
+# convert type_of_day from character to factor
+MyDataImputed$type_of_day <- as.factor(MyDataImputed$type_of_day)
+
+# calculate average steps by interval across all days
+df_imputed_steps_by_interval <- aggregate(steps ~ interval + type_of_day, MyDataImputed, mean)
+
+# creat a plot
+qplot(interval, 
+      steps, 
+      data = df_imputed_steps_by_interval, 
+      type = 'l', 
+      geom=c("line"),
+      xlab = "Interval", 
+      ylab = "Number of steps", 
+      main = "") +
+  facet_wrap(~ type_of_day, ncol = 1)
 ```
 
-```
-## 'data.frame':	576 obs. of  3 variables:
-##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
-##  $ week    : Factor w/ 2 levels "weekday","weekend": 1 1 1 1 1 1 1 1 1 1 ...
-##  $ x       : num  2.251 0.445 0.173 0.198 0.099 ...
-```
-
-```r
-stepsPerIntervalByWeek$time <- formatC(stepsPerIntervalByWeek$interval, width = 4, format = "d", flag = "0")
-stepsPerIntervalByWeek$time <- as.POSIXct(stepsPerIntervalByWeek$time, format="%H%M")
-```
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
 
 
