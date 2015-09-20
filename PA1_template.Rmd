@@ -9,7 +9,7 @@ output:
 ## Loading and preprocessing the data
 
 * code  for reading in the dataset
-data<-read.table("./data/household_power_consumption.txt",sep=";", header = TRUE, na.strings = "?")
+data<-read.table("./data/activity.csv",sep=";", header = TRUE, na.strings = "?")
 
 * preprocessing the data
 
