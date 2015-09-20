@@ -7,21 +7,49 @@ output:
 
 
 ## Loading and preprocessing the data
+1. Download the csv file activity.csv into your pwd.
 
+2. Read the csv file. Hint : Use the read.csv() function
 * code  for reading in the dataset
-data<-read.table("./data/activity.csv",sep=";", header = TRUE, na.strings = "?")
+* 
+```{r}
+MyData <- read.csv(file="E://R//course5//Course5//activity.csv", header=TRUE, sep=",")
+str(MyData)
+```
 
 * preprocessing the data
 
 
 
 ## What is mean total number of steps taken per day?
+```{r}
+avgsteps <- mean(MyData$Steps)
+str(avgsteps)
+```
+average number of steps taken by this person is `r avgsteps` .
+
 *histogram of the total number of steps taken each day
 
 
 ## What is the average daily activity pattern?
 *Both the mean and median are reported
 *the 5-minute interval containing the maximum number of steps is reported
+
+```{r}
+average_steps_day <- aggregate(MyData$Steps,list(Day=MyData$Day),mean )
+dailyaverage <-aggregate(Steps ~ Day, MyData,mean)
+average_steps_day
+colnames(average_steps_day) <- c("day","steps")
+head(average_steps_day)
+```
+
+```{r}
+medianofstepsbyday= median(average_steps_day$steps)
+medianofstepsbyday
+```
+*the mean and median are reported
++ the mean  : `r average_steps_day` 
++ the median: `r medianofstepsbyday` 
 
 
 ## Imputing missing values
@@ -32,7 +60,14 @@ data<-read.table("./data/activity.csv",sep=";", header = TRUE, na.strings = "?")
 
 ## Are there differences in activity patterns between weekdays and weekends?
 *a panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+```{r}
+dailyaverage2<-aggregate(Steps ~ Hours, myData2,mean)
 
+ggplot(dailyaverage2,aes(x=hours,y=Steps)) +
+  geom_line(color="blue",size=1)+
+labs(title="average pattern",x="hours",y="Steps")
+
+```
 
 *  report show all of the R code needed to reproduce the results (numbers, plots, etc.) in the report
 * this report contains R code for **all** of the results presented
