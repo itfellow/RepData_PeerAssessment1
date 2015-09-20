@@ -7,19 +7,33 @@ output:
 
 
 ## Loading and preprocessing the data
-#### test
+
+###  code  for reading in the dataset
+data<-read.table("./data/household_power_consumption.txt",sep=";", header = TRUE, na.strings = "?")
+
+### preprocessing the data
+
 
 
 ## What is mean total number of steps taken per day?
-
+###histogram of the total number of steps taken each day
 
 
 ## What is the average daily activity pattern?
-
+###Both the mean and median are reported
+###the 5-minute interval containing the maximum number of steps is reported
 
 
 ## Imputing missing values
+#### description of a strategy for imputing missing data
 
+#### a histogram of the total number of steps taken each day after missing values were impute
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+### a panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+
+
+####  report show all of the R code needed to reproduce the results (numbers, plots, etc.) in the repor
+
+
