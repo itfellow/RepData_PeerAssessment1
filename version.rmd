@@ -1,0 +1,6 @@
+
+Place code inline with a single back ticks. The
+first back tick must be followed by an R, like
+this `r paste("Hello", "World!")`.
+
+## Header 2 
